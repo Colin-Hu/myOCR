@@ -24,20 +24,22 @@
 
 function [outneuron] = initializeneuron (numinputs, seed)
 
+# Requires seeded random for testing and evaluation as well as local minimums
 switch nargin
   case 1
     seed = rand();
 end
 
 rand("seed",seed);
+# Weights and biases are uniformly generated between -5 and 5
 bias = (0.5-rand())*10;
 
 weights = zeros(1,numinputs);
-
 for iinput = 1:numinputs
   weights(iinput) = (0.5-rand())*10;
 end
 
+# Assign values to neuron structure
 outneuron.bias = bias;
 outneuron.weights = weights;
 

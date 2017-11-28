@@ -27,13 +27,16 @@ function [outarray] = applylayer (inputarray, layerneurons)
 maxneurons = length(layerneurons);
 numneurons = 0;
 
+# Determine number of outputs needed for this layer
 for ineuron = 1:maxneurons
   if (length(layerneurons(ineuron).neurons) > 0)
     numneurons = numneurons + 1;
+  end
 end
 
 outarray = zeros(1,numneurons);
 
+# For each neuron, evaluate given the inputs
 for ineuron = 1:numneurons
   outarray(ineuron) = applyneuron(inputarray, layerneurons(ineuron).neurons);
 end

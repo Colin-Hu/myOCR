@@ -14,7 +14,7 @@
 ## along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ## -*- texinfo -*- 
-## @deftypefn {Function File} {@var{retval} =} applyneuron (@var{input1}, @var{input2})
+## @deftypefn {Function File} {@var{retval} =} sigmf (@var{input1}, @var{input2})
 ##
 ## @seealso{}
 ## @end deftypefn
@@ -22,18 +22,11 @@
 ## Author: colin <colin@colin-VirtualBox>
 ## Created: 2017-11-28
 
-function [outval] = applyneuron (inputarray, neuron)
+function [retval] = sigmf (input1)
 
-numinputs = length(inputarray);
+# Logistic function
+# https://en.wikipedia.org/wiki/Sigmoid_function
 
-# Generates neural response based on weighted inputs as well as bias
-outval = neuron.bias;
-
-for iinput = 1:numinputs
-  outval = outval + inputarray(iinput)*neuron.weights(iinput);
-end
-
-# Output on sigmoid function [-1,1]
-outval = sigmf(outval);
+retval = 1 / (1 + exp(-1 * input1));
 
 endfunction
