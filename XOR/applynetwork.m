@@ -22,14 +22,17 @@
 ## Author: colin <colin@colin-VirtualBox>
 ## Created: 2017-11-28
 
-function [usevalues] = applynetwork (inputvalues, neuralnetwork)
+function [outputvalues] = applynetwork (inputvalues, neuralnetwork)
 
 # Start with input layer
 usevalues = inputvalues;
 
+outputvalues = inputvalues;
+
 # Successively apply outputs of one layer as inputs of the next for each layer
 for ilayer = 1:size(neuralnetwork,1);
   usevalues = applylayer(usevalues,neuralnetwork(ilayer,:));
+  outputvalues = vertcat(outputvalues, usevalues);
 end
 
 endfunction

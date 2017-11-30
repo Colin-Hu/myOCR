@@ -28,20 +28,38 @@ newnetwork = neuralnetwork;
 
 deltas = zeros(size(newnetwork));
 
-for ilayer = size(newnetwork,1):1
+# Calculate Deltas for each node
+for ilayer = size(newnetwork,1):-1:1
   if ilayer == size(newnetwork,1)
     for ineuron = 1:size(nnout,2)
-      deltas(ilayer,ineuron) = (nnout(ilayer, ineuron) - target(ineuron)) * nnout(ilayer, ineuron) * (1 - nnout(ilayer, ineuron));
+      deltas(ilayer,ineuron) = (nnout(ilayer+1, ineuron) - target(ineuron)) * nnout(ilayer+1, ineuron) * (1 - nnout(ilayer+1, ineuron));
     end
   else
     for ineuron = 1:size(nnout,2)
       for jneuron = 1:size(nnout,2)
-        deltas(ilayer,ineuron) = deltas(ilayer,ineuron) + deltas(ilayer+1,jneuron) * neuralnetwork(ilayer+1,jneuron).neurons.weights(ineuron);
+        if length(neuralnetwork(ilayer+1,jneuron).neurons) > 0
+          deltas(ilayer,ineuron) = deltas(ilayer,ineuron) + deltas(ilayer+1,jneuron) * neuralnetwork(ilayer+1,jneuron).neurons.weights(ineuron);
+        end
       end
-      deltas(ilayer,ineuron) = deltas(ilayer,ineuron) * nnout(ilayer,ineuron) * (1 - nnout(ilayer, ineuron));
+      deltas(ilayer,ineuron) = deltas(ilayer,ineuron) * nnout(ilayer+1,ineuron) * (1 - nnout(ilayer+1, ineuron));      
     end
   end
 end
 
+# Adjust weights
+for ilayer = 1:size(newnetwork,1)
+  for ineuron = 1:size(nnout,2)
+    for iweight = 1:length(newnetwork(ilayer,ineuron).neurons.weights)
+      newnetwork(ilayer,ineuron).neurons.weights(iweight) = newnetwork(ilayer,ineuron).neurons.weights(iweight) - learningrate * deltas(ilayer,ineuron) * nnout(ilayer,iweight);
+    end
+  end
+end
+
+# Adjust biases
+for ilayer = 1:size(newnetwork,1)
+  for ineuron = 1:size(nnout,2)
+    newnetwork(ilayer,ineuron).neurons.bias = newnetwork(ilayer,ineuron).neurons.bias - learningrate * deltas(ilayer,ineuron);
+  end
+end
 
 endfunction

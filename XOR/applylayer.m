@@ -34,7 +34,7 @@ for ineuron = 1:maxneurons
   end
 end
 
-outarray = zeros(1,numneurons);
+outarray = zeros(1,maxneurons);
 
 # For each neuron, evaluate given the inputs
 for ineuron = 1:numneurons
