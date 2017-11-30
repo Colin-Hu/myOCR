@@ -46,19 +46,15 @@ for ilayer = size(newnetwork,1):-1:1
   end
 end
 
-# Adjust weights
+# Adjust weights and biases
 for ilayer = 1:size(newnetwork,1)
   for ineuron = 1:size(nnout,2)
-    for iweight = 1:length(newnetwork(ilayer,ineuron).neurons.weights)
-      newnetwork(ilayer,ineuron).neurons.weights(iweight) = newnetwork(ilayer,ineuron).neurons.weights(iweight) - learningrate * deltas(ilayer,ineuron) * nnout(ilayer,iweight);
+    if length(neuralnetwork(ilayer,ineuron).neurons) > 0
+      for iweight = 1:length(newnetwork(ilayer,ineuron).neurons.weights)
+        newnetwork(ilayer,ineuron).neurons.weights(iweight) = newnetwork(ilayer,ineuron).neurons.weights(iweight) - learningrate * deltas(ilayer,ineuron) * nnout(ilayer,iweight);
+      end
+      newnetwork(ilayer,ineuron).neurons.bias = newnetwork(ilayer,ineuron).neurons.bias - learningrate * deltas(ilayer,ineuron);
     end
-  end
-end
-
-# Adjust biases
-for ilayer = 1:size(newnetwork,1)
-  for ineuron = 1:size(nnout,2)
-    newnetwork(ilayer,ineuron).neurons.bias = newnetwork(ilayer,ineuron).neurons.bias - learningrate * deltas(ilayer,ineuron);
   end
 end
 
