@@ -49,20 +49,25 @@ for ilayer = 1:nndepth
   end
 end
 
-biasmax = 5;
-biasmin = -5;
-weightmax = 5;
-weightmin = -5;
+# For small networks, there is not enough range, so just use -5 to 5, the initialization range
+%biasmax = 5;
+%biasmin = -5;
+%weightmax = 5;
+%weightmin = -5;
 
 biasrange = biasmax - biasmin;
 weightrange = weightmax - weightmin;
 
 yposition = 0;
-#figure;
+
 hold off;
+plot(0, 0);
+hold on;
+#
 for ilayer = nndepth:-1:1
   nneurons = 0;
   nconnection = length(neuralnetwork(ilayer,1).neurons.weights);
+  # Count number of neurons in this layer
   for ineuron = 1:size(neuralnetwork,2)
     if length(neuralnetwork(ilayer,ineuron).neurons) > 0
       nneurons = nneurons + 1;
@@ -73,20 +78,31 @@ for ilayer = nndepth:-1:1
   xabovepositions = linspace(-1*(nconnection-1)/2,(nconnection-1)/2,nconnection);
   for ineuron = 1:nneurons
     for iconnection = 1:nconnection
+      # Draw lines from layer to next higher layer
       myconnection = plot([xpositions(ineuron) xabovepositions(iconnection)],[yposition yposition+1]);
       mycolor = (neuralnetwork(ilayer,ineuron).neurons.weights(iconnection)-weightmin)/weightrange;
       mycolor = floor(mycolor * 99)+1;
       set(myconnection,'Color',mycolormap(mycolor,:));
-      hold on;
+      set(myconnection,'LineWidth',5);
+      # Add labels to weights
+      # Warning: spacing is hardcoded and not adaptive, may fail for larger networks
+      mylabel = text((xpositions(ineuron)+0.3*xabovepositions(iconnection)),yposition+0.3, num2str(neuralnetwork(ilayer,ineuron).neurons.weights(iconnection)));
+      set(mylabel,'HorizontalAlignment','center');
     end
+    # Draw neurons for layer
     mycolor = (neuralnetwork(ilayer,ineuron).neurons.bias-biasmin)/biasrange;
     mycolor = floor(mycolor * 99)+1;
     myneuron = plot(xpositions(ineuron),yposition,'MarkerSize',100);
     set(myneuron,'MarkerEdgeColor',mycolormap(mycolor,:));
+    # Add labels to biases
+    mylabel = text(xpositions(ineuron),yposition, num2str(neuralnetwork(ilayer,ineuron).neurons.bias));
+    set(mylabel,'HorizontalAlignment','center');
+    set(mylabel,'Color',[1 1 1] - mycolormap(mycolor,:));
   end
   yposition = yposition + 1;
 end
 
+# Place input nodes
 ninput = length(neuralnetwork(1,1).neurons.weights);
 for iinput = 1:ninput
   xpositions = linspace(-1*(ninput-1)/2,(ninput-1)/2,ninput);
