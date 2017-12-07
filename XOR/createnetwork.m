@@ -7,6 +7,10 @@ seed1 = 2;
 seed2 = 3;
 seed3 = 4;
 
+seed1 = 20;
+seed2 = 31;
+seed3 = 7;
+
 xornetwork = struct('neurons',{2,2});
 xornetwork(1,1).neurons = initializeneuron(2,seed1);
 xornetwork(1,2).neurons = initializeneuron(2,seed2);
@@ -28,8 +32,12 @@ learningxor = xornetwork;
 xoroutputtable
 figure;
 visualizenetwork(learningxor);
-for i = 1:20
-  learningxor = trainnetwork(learningxor,xorinputtable,xoroutputtable,100,0.5);
+% Convergence on local minima can be found in about 2000 generations tops
+% Oscillations seem to indicate local minima, while global solution continues
+% to converge, use this metric as a restart criteria?
+% How does pretraining work?
+for i = 1:10
+  learningxor = trainnetwork(learningxor,xorinputtable,xoroutputtable,500,0.5);
   visualizenetwork(learningxor);
   vertcat(applynetwork([0,0],learningxor)(3,:),applynetwork([0,1],learningxor)(3,:),applynetwork([1,0],learningxor)(3,:),applynetwork([1,1],learningxor)(3,:))
   w = waitforbuttonpress;

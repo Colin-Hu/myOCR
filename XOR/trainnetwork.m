@@ -33,13 +33,16 @@ for itrial = 1:generations
     jvalue = floor(rand()*ninputs)+1;
     outvalues = applynetwork(inputtable(jvalue,:),outnetwork);
     outlayer = size(outvalues,1);
-    for iout = 1:length(outvalues(outlayer,:))
-      if (outvalues(outlayer,iout) < 0.1)
-        outvalues(outlayer,iout) = 0.0;
-      elseif (outvalues(outlayer,iout) > 0.9)
-        outvalues(outlayer,iout) = 1.0;
-      end
-    end
+    % The way the backpropagation is currently coded with delta calculation
+    % taking into account the product of the output, adjustments cannot be made 
+    % on the actual output, elso no learning will take place
+%    for iout = 1:length(outvalues(outlayer,:))
+%      if (outvalues(outlayer,iout) < 0.1)
+%        outvalues(outlayer,iout) = 0.0;
+%      elseif (outvalues(outlayer,iout) > 0.9)
+%        outvalues(outlayer,iout) = 1.0;
+%      end
+%    end
     outnetwork = backpropagate(outnetwork,outvalues,outputtable(jvalue,:),learningrate);
   end
 end

@@ -30,9 +30,11 @@ deltas = zeros(size(newnetwork));
 
 # Calculate Deltas for each node
 for ilayer = size(newnetwork,1):-1:1
+%  printf("Calculating Deltas for ilayer %d\n",ilayer);
   if ilayer == size(newnetwork,1)
     for ineuron = 1:size(nnout,2)
       deltas(ilayer,ineuron) = (nnout(ilayer+1, ineuron) - target(ineuron)) * nnout(ilayer+1, ineuron) * (1 - nnout(ilayer+1, ineuron));
+%      printf("Ineuron %d %f\n",ineuron,deltas(ilayer,ineuron));
     end
   else
     for ineuron = 1:size(nnout,2)
