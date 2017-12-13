@@ -27,7 +27,8 @@ function [outputvalues] = applynetwork (inputvalues, neuralnetwork)
 # Start with input layer
 usevalues = inputvalues;
 
-outputvalues = inputvalues;
+outputvalues = zeros(1,size(neuralnetwork,2));
+outputvalues(1:length(inputvalues)) = inputvalues(:);
 
 # Successively apply outputs of one layer as inputs of the next for each layer
 for ilayer = 1:size(neuralnetwork,1);
