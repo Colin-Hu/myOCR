@@ -33,7 +33,9 @@ for ilayer = size(newnetwork,1):-1:1
 %  printf("Calculating Deltas for ilayer %d\n",ilayer);
   if ilayer == size(newnetwork,1)
     for ineuron = 1:size(nnout,2)
-      deltas(ilayer,ineuron) = (nnout(ilayer+1, ineuron) - target(ineuron)) * nnout(ilayer+1, ineuron) * (1 - nnout(ilayer+1, ineuron));
+      if length(neuralnetwork(ilayer,ineuron).neurons) > 0
+        deltas(ilayer,ineuron) = (nnout(ilayer+1, ineuron) - target(ineuron)) * nnout(ilayer+1, ineuron) * (1 - nnout(ilayer+1, ineuron));
+      end
 %      printf("Ineuron %d %f\n",ineuron,deltas(ilayer,ineuron));
     end
   else
