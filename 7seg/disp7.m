@@ -25,8 +25,7 @@
 function [myplot] = disp7 (inputarray)
 
 linethickness = 8;
-hold off;
-plot(0,0);
+figure;
 hold on;
 
 if inputarray(1) ~= 0
