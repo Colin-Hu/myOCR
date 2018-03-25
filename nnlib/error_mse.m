@@ -24,13 +24,16 @@
 
 function [errors] = error_mse (target, output)
 
-numvalues = length(target) + 1;
-errors = zeros(1,numvalues);
+numivalues = size(target,1);
+numjvalues = size(target,2);
+myerrors = zeros(numivalues, numjvalues);
 
-for icount = 1:length(target)
-  errors(icount) = 0.5 * (target(icount) - output(icount))^2;
+for icount = 1:size(target,1);
+  for jcount = 1:size(target,2);
+    myerrors(icount,jcount) = 0.5 * (target(icount,jcount) - output(icount,jcount))^2;
+  end
 end
 
-errors(numvalues) = sum(errors);
+errors = sum(sum(myerrors));
 
 endfunction

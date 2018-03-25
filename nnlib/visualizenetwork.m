@@ -60,8 +60,9 @@ weightrange = weightmax - weightmin;
 
 yposition = 0;
 
-hold off;
-plot(0, 0);
+#hold off;
+#plot(0, 0);
+figure;
 hold on;
 #
 for ilayer = nndepth:-1:1
@@ -86,8 +87,8 @@ for ilayer = nndepth:-1:1
       set(myconnection,'LineWidth',5);
       # Add labels to weights
       # Warning: spacing is hardcoded and not adaptive, may fail for larger networks
-      mylabel = text((xpositions(ineuron)+0.3*xabovepositions(iconnection)),yposition+0.3, num2str(neuralnetwork(ilayer,ineuron).neurons.weights(iconnection)));
-      set(mylabel,'HorizontalAlignment','center');
+      #mylabel = text((xpositions(ineuron)+0.3*xabovepositions(iconnection)),yposition+0.3, num2str(neuralnetwork(ilayer,ineuron).neurons.weights(iconnection)));
+      #set(mylabel,'HorizontalAlignment','center');
     end
     # Draw neurons for layer
     mycolor = (neuralnetwork(ilayer,ineuron).neurons.bias-biasmin)/biasrange;
