@@ -23,13 +23,15 @@ sevensegoutputtable = [1 1 1 1 1 1 0; ... #0
                        1 1 1 1 1 1 1; ... #8
                        1 1 1 1 0 1 1; ... #9
                       ];
-subinputtable = sevenseginputtable([1,8],:);
-suboutputtable = sevensegoutputtable([1,8],:);
+%subinputtable = sevenseginputtable([1,8],:);
+%suboutputtable = sevensegoutputtable([1,8],:);
+subinputtable = sevenseginputtable;
+suboutputtable = sevensegoutputtable;
 
 failednetworks = 0;
 convergednetworks = 0;
 for iseed = 1:1
-  seeds = rand(1,7);
+  seeds = rand(2,7);
   #printf("\n\nTrying seeds %f %f %f\n",seed1,seed2,seed3);
 %  seeds
   fflush(stdout);
@@ -46,11 +48,12 @@ for iseed = 1:1
   end
   learningnetwork = sevensegnetwork;
   previouserror = 100000;
-  numloops = 20;
+  numloops = 100;
   for i = 1:numloops
-    learningnetwork = trainnetwork(learningnetwork,subinputtable,suboutputtable,100,0.5);
+    learningnetwork = trainnetwork(learningnetwork,subinputtable,suboutputtable,100,5);
 %    visualizenetwork(learningnetwork);
-    nnout = vertcat(applynetwork(subinputtable(1,:),learningnetwork)(size(seeds,1)+1,:),applynetwork(subinputtable(2,:),learningnetwork)(size(seeds,1)+1,:));
+%    nnout = vertcat(applynetwork(subinputtable(1,:),learningnetwork)(size(seeds,1)+1,:),applynetwork(subinputtable(2,:),learningnetwork)(size(seeds,1)+1,:));
+    nnout = getnnout(subinputtable, learningnetwork, suboutputtable);
     nnerror = error_mse(suboutputtable, nnout);
     totalerror = nnerror;
 %    suboutputtable
@@ -63,18 +66,23 @@ for iseed = 1:1
       failednetworks++;
       break;
     end
+    if (totalerror < 0.01)
+      printf("Achieved quiescence %f\n",totalerror);
+      break;
+    end
     previouserror = totalerror;
 %    disp7(round(applynetwork([0 1 1 0],learningnetwork)(2,:)));
 %    disp7(round(applynetwork([0 1 1 1],learningnetwork)(2,:)));
 %    pause();
   end
-  if (i == numloops)
+  if (i == numloops || totalerror < 0.01)
     visualizenetwork(learningnetwork);
 %    convergednetworks++;
     printf("Proper network found\n");
     fflush(stdout);
-    disp7(round(applynetwork([0 0 0 0],learningnetwork)(2,:)));
-    disp7(round(applynetwork([0 1 1 1],learningnetwork)(2,:)));
+%    disp7(round(applynetwork([0 0 0 0],learningnetwork)(2,:)));
+%    disp7(round(applynetwork([0 1 1 1],learningnetwork)(2,:)));
+    disp7all(subinputtable,learningnetwork);
 %    pause();
   end
 %  w = waitforbuttonpress;
