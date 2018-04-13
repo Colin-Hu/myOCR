@@ -116,19 +116,7 @@ suboutputtable = sevensegoutputtable([1,4,5,8,9,10],:);
 failednetworks = 0;
 convergednetworks = 0;
 quiessednetworks = 0;
-  seeds = rand(2,7);
-  clear sevensegnetwork;
-  sevensegnetwork = struct('neurons',zeros(size(seeds,1),size(seeds,2)));
-  for ilevel = 1:size(seeds,1)
-    for ineuron = 1:size(seeds,2)
-      if ilevel == 1
-%        sevensegnetwork(ilevel,ineuron).neurons = initializeneuron(4,seeds(ilevel,ineuron));
-        sevensegnetwork(ilevel,ineuron).neurons = learningnetwork(ilevel,ineuron).neurons;
-      else
-        sevensegnetwork(ilevel,ineuron).neurons = initializeneuron(7,seeds(ilevel,ineuron));
-      end
-    end
-  end
+sevensegnetwork = usepretrained (learningnetwork);
   learningnetwork = sevensegnetwork;
   previouserror = 100000;
   numloops = 100;
@@ -168,7 +156,9 @@ quiessednetworks = 0;
 %    disp7(round(applynetwork([0 0 0 0],learningnetwork)(2,:)));
 %    disp7(round(applynetwork([0 1 1 1],learningnetwork)(2,:)));
 %    pause();
-  end
+end
+visualizenetwork(learningnetwork);
 %  w = waitforbuttonpress;
-disp7all(subinputtable,learningnetwork);
+%disp7all(subinputtable,learningnetwork);
+
 printf("\nFailed networks %d\nConverged networks %d\nQueissednetworks %d\n",failednetworks,convergednetworks,quiessednetworks);
