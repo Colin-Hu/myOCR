@@ -42,71 +42,75 @@ suboutputtable = sevensegoutputtable([1,4,8,9],:);
 failednetworks = 0;
 convergednetworks = 0;
 quiessednetworks = 0;
-for iseed = 1:1
-  seeds = rand(1,7);
-  #printf("\n\nTrying seeds %f %f %f\n",seed1,seed2,seed3);
-%  seeds
-  fflush(stdout);
-  clear sevensegnetwork;
-  sevensegnetwork = struct('neurons',zeros(size(seeds,1),size(seeds,2)));
-  for ilevel = 1:size(seeds,1)
-    for ineuron = 1:size(seeds,2)
-      if ilevel == 1
-        sevensegnetwork(ilevel,ineuron).neurons = initializeneuron(4,seeds(ilevel,ineuron));
-      else
-        sevensegnetwork(ilevel,ineuron).neurons = initializeneuron(7,seeds(ilevel,ineuron));
-      end
-    end
-  end
-  learningnetwork = sevensegnetwork;
-  previouserror = 100000;
-  numloops = 100;
-  for i = 1:numloops
-    learningnetwork = trainnetwork(learningnetwork,subinputtable,suboutputtable,10,0.5);
-%    visualizenetwork(learningnetwork);
-%    nnout = vertcat(applynetwork(subinputtable(1,:),learningnetwork)(size(seeds,1)+1,:),applynetwork(subinputtable(2,:),learningnetwork)(size(seeds,1)+1,:));
-    nnout = getnnout(subinputtable, learningnetwork, suboutputtable);
-    nnerror = error_mse(suboutputtable, nnout);
-    totalerror = nnerror;
-%    suboutputtable
-%    nnout
-%    totalerror
-%    fflush(stdout);
-    if (totalerror > previouserror)
-      printf("Stuck in local minima, resetting seeds %f\n",totalerror);
-      fflush(stdout);
-      failednetworks++;
-      break;
-    end
-    if (previouserror-totalerror < 0.01)
-      printf("Learning Negligible %f %f\n",totalerror,previouserror);
-      fflush(stdout);
-      quiessednetworks++;
-      break;
-    end
-    previouserror = totalerror;
-%    disp7(round(applynetwork([0 1 1 0],learningnetwork)(2,:)));
-%    disp7(round(applynetwork([0 1 1 1],learningnetwork)(2,:)));
-%    pause();
-  end
-  if (i == numloops || totalerror < 0.01)
-%    visualizenetwork(learningnetwork);
-   convergednetworks++;
-%    printf("Proper network found\n");
-%    fflush(stdout);
-%    disp7(round(applynetwork([0 0 0 0],learningnetwork)(2,:)));
-%    disp7(round(applynetwork([0 1 1 1],learningnetwork)(2,:)));
-%    disp7all(subinputtable,learningnetwork);
-%    pause();
-  end
-%  w = waitforbuttonpress;
-end
-printf("\nFailed networks %d\nConverged networks %d\nQueissednetworks %d\n",failednetworks,convergednetworks,quiessednetworks);
-%disp7(round(applynetwork([0 1 0 1],learningnetwork)(4,:)));
-%visualizenetwork(learningnetwork);
-%disp7all(subinputtable,learningnetwork);
 
-
+outnetwork = createbestnetwork (subinputtable, suboutputtable, 10, 100, 0.5);
+visualizenetwork(outnetwork);
+stop
+%for iseed = 1:1
+%  seeds = rand(1,7);
+%  #printf("\n\nTrying seeds %f %f %f\n",seed1,seed2,seed3);
+%%  seeds
+%  fflush(stdout);
+%  clear sevensegnetwork;
+%  sevensegnetwork = struct('neurons',zeros(size(seeds,1),size(seeds,2)));
+%  
+%  for ilevel = 1:size(seeds,1)
+%    for ineuron = 1:size(seeds,2)
+%      if ilevel == 1
+%        sevensegnetwork(ilevel,ineuron).neurons = initializeneuron(4,seeds(ilevel,ineuron));
+%      else
+%        sevensegnetwork(ilevel,ineuron).neurons = initializeneuron(7,seeds(ilevel,ineuron));
+%      end
+%    end
+%  end
+%  stop
+%  learningnetwork = sevensegnetwork;
+%  previouserror = 100000;
+%  numloops = 100;
+%  for i = 1:numloops
+%    learningnetwork = trainnetwork(learningnetwork,subinputtable,suboutputtable,10,0.5);
+%%    visualizenetwork(learningnetwork);
+%%    nnout = vertcat(applynetwork(subinputtable(1,:),learningnetwork)(size(seeds,1)+1,:),applynetwork(subinputtable(2,:),learningnetwork)(size(seeds,1)+1,:));
+%    nnout = getnnout(subinputtable, learningnetwork, suboutputtable);
+%    nnerror = error_mse(suboutputtable, nnout);
+%    totalerror = nnerror;
+%%    suboutputtable
+%%    nnout
+%%    totalerror
+%%    fflush(stdout);
+%    if (totalerror > previouserror)
+%      printf("Stuck in local minima, resetting seeds %f\n",totalerror);
+%      fflush(stdout);
+%      failednetworks++;
+%      break;
+%    end
+%    if (previouserror-totalerror < 0.01)
+%      printf("Learning Negligible %f %f\n",totalerror,previouserror);
+%      fflush(stdout);
+%      quiessednetworks++;
+%      break;
+%    end
+%    previouserror = totalerror;
+%%    disp7(round(applynetwork([0 1 1 0],learningnetwork)(2,:)));
+%%    disp7(round(applynetwork([0 1 1 1],learningnetwork)(2,:)));
+%%    pause();
+%  end
+%  if (i == numloops || totalerror < 0.01)
+%%    visualizenetwork(learningnetwork);
+%   convergednetworks++;
+%%    printf("Proper network found\n");
+%%    fflush(stdout);
+%%    disp7(round(applynetwork([0 0 0 0],learningnetwork)(2,:)));
+%%    disp7(round(applynetwork([0 1 1 1],learningnetwork)(2,:)));
+%%    disp7all(subinputtable,learningnetwork);
+%%    pause();
+%  end
+%%  w = waitforbuttonpress;
+%end
+%printf("\nFailed networks %d\nConverged networks %d\nQueissednetworks %d\n",failednetworks,convergednetworks,quiessednetworks);
+%%disp7(round(applynetwork([0 1 0 1],learningnetwork)(4,:)));
+%%visualizenetwork(learningnetwork);
+%%disp7all(subinputtable,learningnetwork);
 
 
 
@@ -148,15 +152,7 @@ sevensegnetwork = usepretrained (learningnetwork);
 %    disp7(round(applynetwork([0 1 1 1],learningnetwork)(2,:)));
 %    pause();
   end
-  if (i == numloops || totalerror < 0.01)
-%    visualizenetwork(learningnetwork);
-   convergednetworks++;
-%    printf("Proper network found\n");
-%    fflush(stdout);
-%    disp7(round(applynetwork([0 0 0 0],learningnetwork)(2,:)));
-%    disp7(round(applynetwork([0 1 1 1],learningnetwork)(2,:)));
-%    pause();
-end
+
 visualizenetwork(learningnetwork);
 %  w = waitforbuttonpress;
 %disp7all(subinputtable,learningnetwork);
