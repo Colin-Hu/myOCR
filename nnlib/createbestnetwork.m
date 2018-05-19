@@ -28,7 +28,7 @@ lasterror = 999999999;
 bestnetwork = "null";
 
 for iseed = 1:numtries
-  iseed
+  printf("Finding network %d\n",iseed);
   if (nargin == 5) % Create new network
     seeds = rand(1,size(outputtable,2));
     clear testnetwork;
@@ -38,15 +38,15 @@ for iseed = 1:numtries
         testnetwork(ilevel,ineuron).neurons = initializeneuron(size(inputtable,2),seeds(ilevel,ineuron));
       end
     end
-    previouserror = 99999;
-    for itry = 1:numtries
-      itry
+  elseif (nargin == 6) % Append to existing network
+    testnetwork = usepretrained(inputnetwork);
+  end
+  previouserror = 99999;
+  for itry = 1:20
       testnetwork = trainnetwork(testnetwork,inputtable,outputtable,numgen,learningrate);
       nnout = getnnout(inputtable, testnetwork, outputtable);
       nnerror = error_mse(outputtable, nnout);
       totalerror = nnerror;
-      totalerror
-      previouserror
       fflush(stdout);
       if (totalerror > previouserror)
         break;
@@ -62,9 +62,6 @@ for iseed = 1:numtries
       end
       previouserror = totalerror;
     end
-  elseif (nargin == 6) % Append to existing network
-    3
-  end
 end
 
 outnetwork = bestnetwork;
